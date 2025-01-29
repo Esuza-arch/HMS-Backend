@@ -1,11 +1,13 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy_serializer import SerializerMixin
+from sqlalchemy.orm import validates
 from datetime import datetime
 
 db = SQLAlchemy()
 
-class Doctor(db.Model):
+class Doctor(db.Model, SerializerMixin):
     __tablename__ = 'doctors'
-    
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     specialty = db.Column(db.String(100), nullable=False)
@@ -17,7 +19,7 @@ class Doctor(db.Model):
     def __repr__(self):
         return f"<Doctor {self.id}: {self.name}, Specialty: {self.specialty}, Experience: {self.experience} years>"
 
-class Patient(db.Model):
+class Patient(db.Model, SerializerMixin):
     __tablename__ = 'patients'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -27,10 +29,16 @@ class Patient(db.Model):
     appointments = db.relationship('Appointment', back_populates='patient')
     reviews = db.relationship('Review', back_populates='patient')
 
+    @validates('email')
+    def validate_email(self, key, email):
+        if '@' not in email:
+            raise ValueError("Invalid email format")
+        return email
+
     def __repr__(self):
         return f"<Patient {self.id}: {self.name}, Email: {self.email}>"
     
-class Appointment(db.Model):
+class Appointment(db.Model, SerializerMixin):
     __tablename__ = 'appointments'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -46,7 +54,7 @@ class Appointment(db.Model):
     def __repr__(self):
         return f"<Appointment {self.id}: Doctor: {self.doctor_id}, Patient: {self.patient_id}, Date: {self.date}>"
 
-class Review(db.Model):
+class Review(db.Model, SerializerMixin):
     __tablename__ = 'reviews'
 
     id = db.Column(db.Integer, primary_key=True)
@@ -57,6 +65,12 @@ class Review(db.Model):
 
     doctor = db.relationship('Doctor', back_populates='reviews')
     patient = db.relationship('Patient', back_populates='reviews')
+
+    @validates('rating')
+    def validate_rating(self, key, rating):
+        if rating < 1 or rating > 5:
+            raise ValueError("Rating must be between 1 and 5")
+        return rating
 
     def __repr__(self):
         return f"<Review {self.id}: Doctor: {self.doctor_id}, Patient: {self.patient_id}, Rating: {self.rating}, Comment: {self.comment}>"
