@@ -31,10 +31,10 @@ def get_doctor(id):
 @app.route('/doctors', methods=['POST'])
 def create_doctor():
     data = request.json
-    doctor = Doctor(name=data['name'], specialty=data['specialty'], experience=data['experience'])
+    new_doctor = Doctor(name=data['name'], specialty=data['specialty'], experience=data['experience'])
     db.session.add(new_doctor)
     db.session.commit()
-    return jsonify(doctor.dict()), 201
+    return jsonify(new_doctor.to_dict()), 201
 
 @app.route('/doctors/<int:id>', methods=['PATCH'])
 def update_doctor(id):
