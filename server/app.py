@@ -12,14 +12,14 @@ db.init_app(app)
 CORS(app)
 migrate = Migrate(app, db)
 
-app.route('/')
+@app.route('/')
 def home():
     return jsonify({"message": "Welcome to the Hospital Management System API"})
 
 @app.route('/doctors', methods=['GET'])
 def get_doctors():
     doctors = Doctor.query.all()
-    return jsonify([doctors.dict() for doctor in doctors])
+    return jsonify([doctor.dict() for doctor in doctors])
 
 @app.route('/doctors/<int:id>', methods=['GET'])
 def get_doctor(id):
@@ -40,7 +40,7 @@ def create_doctor():
 def update_doctor(id):
     doctor = Doctor.query.get(id)
     if not doctor:
-        return jsonify({"error": "Doctor not found"}), 404
+        return jsonify({"message": "Doctor not found"}), 404
     
     data = request.json
     doctor.name = data.get('name', doctor.name)
