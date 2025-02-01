@@ -19,14 +19,14 @@ def home():
 @app.route('/doctors', methods=['GET'])
 def get_doctors():
     doctors = Doctor.query.all()
-    return jsonify([doctor.dict() for doctor in doctors])
+    return jsonify([doctor.to_dict() for doctor in doctors])
 
 @app.route('/doctors/<int:id>', methods=['GET'])
 def get_doctor(id):
     doctor = Doctor.query.get(id)
     if not doctor:
         return jsonify({"message": "Doctor not found"}), 404
-    return jsonify(doctor.dict())
+    return jsonify(doctor.to_dict())
 
 @app.route('/doctors', methods=['POST'])
 def create_doctor():

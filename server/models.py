@@ -7,6 +7,7 @@ db = SQLAlchemy()
 
 class Doctor(db.Model, SerializerMixin):
     __tablename__ = 'doctors'
+    serialize_rules = ('-appointments', '-reviews')
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
@@ -21,6 +22,7 @@ class Doctor(db.Model, SerializerMixin):
 
 class Patient(db.Model, SerializerMixin):
     __tablename__ = 'patients'
+    serialize_rules = ('-appointments', '-reviews')
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
