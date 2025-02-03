@@ -2,7 +2,7 @@ from flask import Flask, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from flask_migrate import Migrate
-from models import db, Doctor, Patient, Appointment, Review 
+from models import db, Doctor, Patient, Appointment, Review
 import os
 
 app = Flask(__name__)
