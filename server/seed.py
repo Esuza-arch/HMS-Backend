@@ -1,5 +1,5 @@
 from faker import Faker
-from server.models import db, Doctor, Patient, Appointment, Review
+from models import db, Doctor, Patient, Appointment, Review
 from app import app
 import random
 from datetime import datetime, timedelta
